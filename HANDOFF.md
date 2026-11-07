@@ -175,6 +175,7 @@ v1（`index.html`、オーナー本人用）とは別に、お客さん向けの
 
 - 妻の確認済み：v1 の30文、g06・b・c の22文、第1弾の24文（s・f・p）
 - **妻の確認待ち：第2・3弾の100文（ev〜by）**。音声は先に作ってある。直しが出たら、その ID の文を直して音声だけ作り直す
+- 確認の状況は、下の「10. 妻の確認シート」で管理する
 - 音声のクレジット：22文で約500、第1弾24文で約540、第2・3弾100文で約2,200（見込み）
 
 ### 9-5. 文づくりの決まり（追加分）
@@ -182,3 +183,21 @@ v1（`index.html`、オーナー本人用）とは別に、お客さん向けの
 - ka は相手が1人、mo／ninyo は2人以上（ていねいさではなく人数で決める）
 - 場面説明で相手の人数が分かるように書く（「1人に」「みんなに」など）
 - 国名・仕事など個人の事情に依存する文は入れない（「abroad」で置き換える）
+
+## 10. 妻の確認シート（全アプリ共通）
+
+妻（Jen）への確認は、アプリごとにファイルを作らず、1つの Google スプレッドシートで管理する。妻は日本語が読めないので、シートはすべて英語。
+
+- シート：[Jen's Cebuano Review](https://docs.google.com/spreadsheets/d/1UzoKCUFWQXcGy0Ke_l3YdfxF2rLcRWItUNzJDmC5JpI/edit)（ID `1UzoKCUFWQXcGy0Ke_l3YdfxF2rLcRWItUNzJDmC5JpI`、オーナーの Google ドライブ）
+- タブ：`How to use`（妻向けの説明と件数の集計）、`Sentences`（1文1行）
+- `Sentences` の列：App／ID／Scene group／Situation／Cebuano／Status／Jen's correction／Jen's note／Audio／Updated
+- Status：`To check`（未確認）、`OK`、`Needs fix`（直しあり）、`Fixed`（直して音声も作り直した）
+- Audio：`Recorded`、`Re-record needed`、`Not recorded`
+- 妻が書くのは Status・Jen's correction・Jen's note（薄い黄色の列）だけ。それ以外の列は Claude が書く
+
+### 使い方
+
+1. 新しい文を作ったら、`Sentences` の末尾に行を足す（Status は `To check`）。ID は `'01` のように先頭に `'` を付けて文字列として書く
+2. オーナーが「確認結果を反映して」と言ったら、`Sentences` を読み、`Needs fix` の行の Jen's correction でアプリの文を直し、その ID の音声を作り直す
+3. 反映したら Status を `Fixed`、Audio を `Recorded`、Updated を当日の日付にする
+4. 別のアプリを作るときも同じシートを使い、App 列で見分ける
