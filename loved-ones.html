@@ -95,6 +95,12 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 :root[lang="ja"] .scene{font-weight:500}
 :root[lang="ja"] .hint span,:root[lang="ja"] .pill,:root[lang="ja"] .tag{text-transform:none;letter-spacing:.04em}
 #langNav button{padding:4px 12px}
+.filter{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
+.filter select{font:inherit;font-size:.92rem;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:7px 10px;max-width:100%}
+.filter select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cat-h{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;background:var(--bg);border-top:1px solid var(--line);font-size:.8rem;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.cat-h:first-child{border-top:0}
+.cat-h + .item{border-top:0}
 </style>
 <div class="wrap">
   <header>
@@ -123,6 +129,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
   <section id="practice" hidden>
     <div style="display:flex;flex-direction:column;gap:18px">
+      <div class="filter"><label for="catSel" id="catLbl"></label><select id="catSel"></select></div>
       <div class="stats" id="stats"></div>
       <div class="card" id="card"></div>
     </div>
@@ -192,21 +199,66 @@ const S = {
  "c09":{"c": "Usa ka kilo nga bugas, palihug.", "en": {"s": "At the store, ask for one kilo of rice.", "h": "number + ka + unit + nga + noun, please"}, "ja": {"s": "店で、米を1キロ頼む。", "h": "数＋ka＋単位＋nga＋名詞、お願い"}},
  "c10":{"c": "Wala na bay hangyo?", "en": {"s": "The price seems high. Ask if they can lower it.", "h": "none + already + question + discount"}, "ja": {"s": "値段が高い。まけてもらえないか聞く。", "h": "ない＋もう＋疑問＋値引き"}},
  "c11":{"c": "Lugar lang, palihug.", "en": {"s": "You're on a jeepney. Ask the driver to stop here.", "h": "place + only + please"}, "ja": {"s": "ジプニーで、ここで降りると運転手に伝える。", "h": "場所＋だけ＋お願い"}},
- "c12":{"c": "Sige, magkita ra ta unya.", "en": {"s": "Say goodbye. Tell them you'll see them later.", "h": "okay, verb + ra + we + later"}, "ja": {"s": "別れ際に、じゃあまたあとでと言う。", "h": "じゃあ、動詞＋ra＋私たち＋あとで"}}
+ "c12":{"c": "Sige, magkita ra ta unya.", "en": {"s": "Say goodbye. Tell them you'll see them later.", "h": "okay, verb + ra + we + later"}, "ja": {"s": "別れ際に、じゃあまたあとでと言う。", "h": "じゃあ、動詞＋ra＋私たち＋あとで"}},
+ "s01":{"c": "Nalipay ko nga nakaila nimo.", "en": {"s": "You meet a relative for the first time. Say you're glad to meet them.", "h": "happy + nga + what happened"}, "ja": {"s": "初めて会った親せきに、会えてうれしいと言う。", "h": "うれしい＋nga＋〜したこと"}},
+ "s02":{"c": "Unang higayon nako diri.", "en": {"s": "Say it's your first time here.", "h": "first time + my + here"}, "ja": {"s": "ここに来るのは初めてだと言う。", "h": "初めて＋私の＋ここ"}},
+ "s03":{"c": "Ganahan kaayo ko diri.", "en": {"s": "Someone asks if you like it here. Say you like it a lot.", "h": "like + very + I + here"}, "ja": {"s": "ここは気に入ったかと聞かれた。とても気に入ったと答える。", "h": "好き＋とても＋私＋ここ"}},
+ "s04":{"c": "Nagpuyo mi sa abroad.", "en": {"s": "Someone asks where you live. Say you and your family live abroad.", "h": "verb + we + place"}, "ja": {"s": "どこに住んでいるのか聞かれた。家族で外国に住んでいると答える。", "h": "動詞＋私たち＋場所"}},
+ "s05":{"c": "Wala pa mi anak.", "en": {"s": "Someone asks if you have children. Say not yet.", "h": "none + yet + we + noun"}, "ja": {"s": "子どもはいるのかと聞かれた。まだいないと答える。", "h": "ない＋まだ＋私たち＋名詞"}},
+ "s06":{"c": "Gitudloan ko niya og Binisaya.", "en": {"s": "Say your partner is teaching you Cebuano.", "h": "verb (be taught) + I + by them + og + noun"}, "ja": {"s": "パートナーにセブアノ語を教えてもらっていると話す。", "h": "動詞（〜してもらう）＋私＋その人＋og＋名詞"}},
+ "s07":{"c": "Natawo ko sa abroad.", "en": {"s": "Say you were born abroad.", "h": "verb + I + place"}, "ja": {"s": "自分は外国で生まれたと話す。", "h": "動詞＋私＋場所"}},
+ "s08":{"c": "Bisaya akong mama.", "en": {"s": "Say your mother is Visayan.", "h": "noun + my …"}, "ja": {"s": "母がビサヤの人だと話す。", "h": "名詞＋私の〜"}},
+ "f01":{"c": "Kumusta na ang tanan diri?", "en": {"s": "Ask how everyone here is doing.", "h": "ask how + everyone + here"}, "ja": {"s": "着いてすぐ、家のみんなは元気か聞く。", "h": "様子を聞く＋みんな＋ここ"}},
+ "f02":{"c": "Pila na ang imong mga apo?", "en": {"s": "Ask your mother-in-law how many grandchildren she has now.", "h": "how many + now + your + plural + noun"}, "ja": {"s": "義母に、孫は何人になったか聞く。", "h": "いくつ＋もう＋あなたの＋複数＋名詞"}},
+ "f03":{"c": "Nagdako na kaayo ka!", "en": {"s": "You see a child you haven't seen in a while. Say they've grown so much.", "h": "verb + already + very + you"}, "ja": {"s": "久しぶりに会った子どもに、大きくなったねと言う。", "h": "動詞＋もう＋とても＋あなた"}},
+ "f04":{"c": "Asa na nag-eskwela ang imong anak?", "en": {"s": "Ask a relative where their child goes to school now.", "h": "where + now + verb + your …"}, "ja": {"s": "親せきに、子どもは今どこの学校に通っているか聞く。", "h": "どこ＋今＋動詞＋あなたの〜"}},
+ "f05":{"c": "Minyo na ka?", "en": {"s": "Ask a cousin if they're married yet.", "h": "state + already + you"}, "ja": {"s": "いとこに、もう結婚しているか聞く。", "h": "状態＋もう＋あなた"}},
+ "f06":{"c": "Kinsa ni siya?", "en": {"s": "Someone shows you a photo. Ask who this is.", "h": "who + this + they"}, "ja": {"s": "写真を見せてもらった。この人は誰か聞く。", "h": "誰＋これ＋その人"}},
+ "f07":{"c": "Kumusta na ang imong trabaho?", "en": {"s": "Ask a relative how their work is going.", "h": "ask how + your …"}, "ja": {"s": "親せきに、仕事はどうか聞く。", "h": "様子を聞く＋あなたの〜"}},
+ "f08":{"c": "Pila mo ka magsuon?", "en": {"s": "Ask how many siblings they have.", "h": "how many + you all + ka + noun"}, "ja": {"s": "何人きょうだいか聞く。", "h": "いくつ＋あなたたち＋ka＋名詞"}},
+ "p01":{"c": "Madungog ba ko nimo?", "en": {"s": "You're on a one-on-one video call. Ask if they can hear you.", "h": "can hear + question + me + you"}, "ja": {"s": "1対1のビデオ通話がつながった。声が聞こえるか聞く。", "h": "聞こえる＋疑問＋私＋あなた"}},
+ "p02":{"c": "Dili kaayo ko kadungog nimo.", "en": {"s": "Say you can't hear them well.", "h": "not + very + I + hear + you"}, "ja": {"s": "相手の声がよく聞こえないと伝える。", "h": "否定＋あまり＋私＋聞こえる＋あなた"}},
+ "p03":{"c": "Hinay ang signal diri.", "en": {"s": "Say the signal is weak where you are.", "h": "state + subject + here"}, "ja": {"s": "こちらの電波が弱いと言う。", "h": "状態＋主語＋ここ"}},
+ "p04":{"c": "Dili ko kakita nimo.", "en": {"s": "The screen froze. Say you can't see them.", "h": "not + I + see + you"}, "ja": {"s": "画面が止まって、相手が見えないと伝える。", "h": "否定＋私＋見える＋あなた"}},
+ "p05":{"c": "Gimingaw na mi ninyo.", "en": {"s": "On the call, say you and your family miss them.", "h": "miss + already + we + you all"}, "ja": {"s": "電話で、家族みんながあなたたちに会いたがっていると伝える。", "h": "恋しい＋もう＋私たち＋あなたたち"}},
+ "p06":{"c": "Unsay inyong gibuhat karon?", "en": {"s": "Ask what everyone is doing right now.", "h": "what + your (all) + verb + now"}, "ja": {"s": "今みんなで何をしているのか聞く。", "h": "何＋あなたたちの＋動詞＋今"}},
+ "p07":{"c": "Motawag ko pag-usab ugma.", "en": {"s": "Say you'll call again tomorrow.", "h": "verb + I + again + time"}, "ja": {"s": "また明日電話すると伝える。", "h": "動詞＋私＋もう一度＋時"}},
+ "p08":{"c": "Sige, babay sa.", "en": {"s": "End the call. Say bye for now.", "h": "okay + bye + for now"}, "ja": {"s": "通話の終わりに、じゃあまたねと言う。", "h": "じゃあ＋別れのあいさつ＋ひとまず"}}
 };
 
 for(const [id,x] of Object.entries(S)){ x.id=id; if(x.audio===undefined) x.audio="audio/"+id+".mp3"; x.draft=x.audio===null; }
+
+/* Scene categories, in display order. Empty ones stay hidden until sentences are added. */
+const CATS = [
+  ["greet","あいさつ・到着","Greetings and arrival",["01","02","03","04","b01","b02","b11"]],
+  ["self","自己紹介・自分のこと","About you",["s01","s02","s03","s04","s05","s06","s07","s08"]],
+  ["gift","お土産・気づかい","Gifts and care",["05","g06","07","b05","b07"]],
+  ["meal","食事","Meals",["09","10","11","12","13","14","b10"]],
+  ["help","家の手伝い","Helping at home",["15","16"]],
+  ["house","家の中のお願い","Asking at home",[]],
+  ["health","体調・気持ち","Health and feelings",["28"]],
+  ["family","家族の近況","Family news",["18","19","b12","f01","f02","f03","f04","f05","f06","f07","f08"]],
+  ["talk","会話をつなぐ","Keeping the conversation going",["21","22","23","24","25"]],
+  ["plan","予定・時間","Plans and time",[]],
+  ["event","お祝い・行事","Celebrations",["26","27"]],
+  ["call","電話・ビデオ通話","Phone and video calls",["p01","p02","p03","p04","p05","p06","p07","p08"]],
+  ["bye","別れ・次の帰省","Goodbyes",["17","29","30","b30"]],
+  ["local","近所・世間話","Neighbors and small talk",["c01","c02","c03","c04","c05","c06","c07","c12"]],
+  ["town","買い物・移動","Shopping and getting around",["c08","c09","c10","c11"]]
+];
+for(const [k,,,ids] of CATS) for(const id of ids){ if(S[id]) S[id].cat=k; }
+const catName=k=>{const c=CATS.find(x=>x[0]===k);return c?(saved.lang==="ja"?c[1]:c[2]):""};
 
 const COURSES = {
   partner:{langs:["en","ja"], who:"Ma · Pa",
     name:{en:"Your partner's family", ja:"パートナーの家族と話す"},
     blurb:{en:"Your partner is from the Visayas. Talk with their parents, relatives and neighbors.",
            ja:"パートナーがビサヤ地方の出身。義理の両親や親せき、近所の人とセブアノ語で話したい人へ。"},
-    ids:["01","03","04","02","05","g06","07","09","10","11","12","13","14","15","16","17","18","19","21","22","23","24","25","26","27","28","29","30"]},
+    ids:["01","03","04","02","05","g06","07","09","10","11","12","13","14","15","16","17","18","19","21","22","23","24","25","26","27","28","29","30","s01","s02","s03","s04","s05","s06","f01","f02","f03","f04","f05","f06","f07","f08","p01","p02","p03","p04","p05","p06","p07","p08"]},
   heritage:{langs:["en"], who:"Lola · Lolo",
     name:{en:"Your Filipino family"},
     blurb:{en:"You were born or raised outside the Philippines. Talk with your grandparents and relatives back home."},
-    ids:["b01","03","04","b02","b11","b05","g06","b07","09","b10","11","12","13","14","15","16","17","b12","18","19","21","22","23","24","25","26","27","28","29","b30"]},
+    ids:["b01","03","04","b02","b11","b05","g06","b07","09","b10","11","12","13","14","15","16","17","b12","18","19","21","22","23","24","25","26","27","28","29","b30","s01","s02","s03","s04","s07","s08","f01","f03","f04","f05","f06","f07","f08","p01","p02","p03","p04","p05","p06","p07","p08"]},
   everyday:{langs:["en","ja"], who:"Silingan",
     name:{en:"Everyday Cebuano", ja:"セブアノ語の日常会話"},
     blurb:{en:"Daily conversation with neighbors and people around town: greetings, the market, the jeepney.",
@@ -215,7 +267,8 @@ const COURSES = {
 };
 
 const T = {
-  en:{app:"Speak with Your Loved Ones", tagline:"Cebuano speaking practice", practice:"Practice", list:"All sentences",
+  en:{catLabel:"Scene", catAll:"All scenes", catDone:"Nothing left in this scene for today", catDoneNote:"Pick another scene, or go back to all scenes.", catBack:"Back to all scenes",
+    app:"Speak with Your Loved Ones", tagline:"Cebuano speaking practice", practice:"Practice", list:"All sentences",
     pickTitle:"Choose your course", pickNote:"Each course has its own sentences and its own progress. You can switch at any time.",
     foot:"No sign-up. Your progress is saved only in this browser.", change:"Change course", reset:"Reset this course", resetConfirm:"Tap again to reset",
     ready:(n,m)=>`${n} sentences ready`+(m?` · ${m} more coming`:""),
@@ -229,7 +282,8 @@ const T = {
     draft:"Draft", draftNote:"Waiting for a native-speaker check and audio", notStarted:"Not started", today:"Review today",
     next:d=>{const [y,m,dd]=d.split("-").map(Number);return "Next review "+new Date(y,m-1,dd).toLocaleDateString("en-US",{month:"short",day:"numeric"})},
     play:c=>"Play: "+c},
-  ja:{app:"大切な人と話すセブアノ語", tagline:"声に出して覚えるスピーキング練習", practice:"練習", list:"一覧",
+  ja:{catLabel:"場面", catAll:"すべての場面", catDone:"この場面の文は今日はもうありません", catDoneNote:"ほかの場面を選ぶか、すべての場面に戻してください。", catBack:"すべての場面に戻す",
+    app:"大切な人と話すセブアノ語", tagline:"声に出して覚えるスピーキング練習", practice:"練習", list:"一覧",
     pickTitle:"コースを選んでください", pickNote:"コースごとに文と記録が分かれています。コースはいつでも切り替えられます。",
     foot:"登録は不要です。記録はこのブラウザにだけ保存されます。", change:"コースを変える", reset:"このコースの記録をリセット", resetConfirm:"本当にリセットする（もう一度押す）",
     ready:(n,m)=>`${n}文`+(m?`（ほか${m}文を準備中）`:""),
@@ -298,8 +352,18 @@ function schedule(id,rating){
   c.reps=(c.reps||0)+1; c.last=rating; c.due=addDays(c.interval);
   p.cards[id]=c;
 }
+/* optional scene filter for practice, remembered per course */
+function curCat(){const k=(saved.filter||{})[saved.course]||"";return CATS.some(c=>c[0]===k)?k:""}
+function setCat(k){saved.filter=saved.filter||{};saved.filter[saved.course]=k;persist();pick();renderCard()}
+function courseCats(){const ids=COURSES[saved.course].ids;return CATS.filter(c=>ids.some(id=>S[id].cat===c[0]&&!S[id].draft))}
+function renderFilter(){
+  const t=L(), k=curCat();
+  $("catLbl").textContent=t.catLabel;
+  $("catSel").innerHTML=`<option value="">${t.catAll}</option>`+courseCats().map(c=>`<option value="${c[0]}"${c[0]===k?" selected":""}>${catName(c[0])}</option>`).join("");
+  $("catSel").value=k;
+}
 function queue(){
-  const p=prog(), t=today(), list=ready();
+  const p=prog(), t=today(), k=curCat(), list=ready().filter(x=>!k||x.cat===k);
   const due=list.filter(x=>p.cards[x.id]&&p.cards[x.id].due<=t)
     .sort((a,b)=>p.cards[a.id].due.localeCompare(p.cards[b.id].due));
   const fresh=list.filter(x=>!p.cards[x.id]);
@@ -329,10 +393,13 @@ function renderCard(){
     const left=queue().length;
     el.className="card done-box";
     el.innerHTML = !current
-      ? `<h2>${t.allDone}</h2><p class="note">${t.allDoneNote}</p>`
+      ? (curCat()
+        ? `<h2>${t.catDone}</h2><p class="note">${t.catDoneNote}</p><div class="row" style="justify-content:center"><button class="btn" id="catBack">${t.catBack}</button></div>`
+        : `<h2>${t.allDone}</h2><p class="note">${t.allDoneNote}</p>`)
       : `<h2>${t.limitDone(limit)}</h2><p class="note">${t.limitNote}</p>`+
         (left?`<div class="row" style="justify-content:center"><button class="btn" id="moreBtn">${t.more}</button></div>`:"");
     const m=$("moreBtn"); if(m) m.onclick=()=>{extra+=5;pick();renderCard()};
+    const cb=$("catBack"); if(cb) cb.onclick=()=>{setCat("");renderFilter()};
     return;
   }
   const isNew=!p.cards[current.id];
@@ -376,14 +443,19 @@ function renderCard(){
 
 function renderList(){
   const t=L(), p=prog(), td=today();
-  $("list").innerHTML=items().map(x=>{
+  const row=x=>{
     const c=p.cards[x.id];
     const st=x.draft?`<span class="pill draft">${t.draft}</span>${t.draftNote}`
       :!c?t.notStarted:c.due<=td?t.today:t.next(c.due);
     return `<div class="item">
       <div class="t"><p class="s">${sc(x)}</p><p class="c" lang="ceb">${x.c}</p><p class="st">${st}</p></div>
       ${x.draft?"":`<button class="icon-btn" data-a="${x.audio}" aria-label="${t.play(x.c)}">${PLAY}</button>`}</div>`;
-  }).join("");
+  };
+  const its=items();
+  $("list").innerHTML=CATS.map(([k])=>{
+    const g=its.filter(x=>x.cat===k); if(!g.length) return "";
+    return `<div class="cat-h"><span>${catName(k)}</span><span>${g.length}</span></div>`+g.map(row).join("");
+  }).join("")+its.filter(x=>!x.cat).map(row).join("");
   document.querySelectorAll("#list .icon-btn").forEach(b=>b.onclick=()=>play(b.dataset.a));
 }
 
@@ -424,7 +496,7 @@ function show(v){
   $("tabList").setAttribute("aria-pressed",String(v==="list"));
   $("courseName").textContent=saved.course&&v!=="picker"?COURSES[saved.course].name[saved.lang]:t.tagline;
   if(v==="picker") renderPicker();
-  if(v==="practice") renderCard();
+  if(v==="practice"){renderFilter();renderCard()}
   if(v==="list") renderList();
 }
 function setLang(l){
@@ -435,6 +507,7 @@ function setLang(l){
 }
 $("langEn").onclick=()=>setLang("en");
 $("langJa").onclick=()=>setLang("ja");
+$("catSel").onchange=e=>setCat(e.target.value);
 $("tabPractice").onclick=()=>show("practice");
 $("tabList").onclick=()=>show("list");
 $("changeBtn").onclick=()=>show("picker");
